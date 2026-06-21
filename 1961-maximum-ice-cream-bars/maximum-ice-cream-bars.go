@@ -1,16 +1,24 @@
 func maxIceCream(costs []int, coins int) int {
-    sort.Ints(costs)
-    cnt := 0
-    if coins < costs[0] {
-        return 0
+    freq := make([]int, 100001)
+    for _, cost := range costs {
+        freq[cost]++
     }
-    for i := 0; i < len(costs); i++ {
-        if coins < costs[i] {
-            break
+
+    ans := 0
+
+    for price := 1; price <= 100000; price++ {
+        if freq[price] == 0 {
+            continue
         }
 
-        coins -= costs[i]
-        cnt++
+        canBuy := min(freq[price], coins/price)
+        ans = ans + canBuy 
+        coins = coins - canBuy * price
+
+        if coins < price {
+            break
+        }
     }
-    return cnt
+
+    return ans
 }
